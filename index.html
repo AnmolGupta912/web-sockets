@@ -4,20 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-    <h1>WebSocket connection</h1>
+<body class="min-h-screen bg-gray-900 flex flex-col items-center justify-center gap-5 p-6">
+
+    <h1 class="text-3xl font-bold text-white">
+        WebSocket connection
+    </h1>
+
+    <input
+        type="text"
+        placeholder="Enter your message.."
+        id="message-input"
+        class="w-80 px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 outline-none focus:border-blue-500"
+    >
+
+    <button
+        id="message-send-button"
+        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition cursor-pointer"
+    >
+        Send
+    </button>
+
+    <ul
+        id="message-container"
+        class="w-80 space-y-2 text-white"
+    ></ul>
 
 </body>
 <script>
+    const messgeInput = document.querySelector("#message-input")
+    const sendMessgeButton =  document.querySelector("#message-send-button")
+    const messageContainer = document.querySelector("#message-container")
+
+
+
     const { port } = window.location
-    console.log(port)
+    // console.log(port)
     const connection = new WebSocket(`ws://localhost:${port}`)
     connection.onopen = () => {
-        connection.send("pingg hello ji from client") // sending req to server
-        connection.onmessage = (message) => { // reading the res of server 
-            console.log(message.data)
+        connection.onmessage = (message) => {
+            const rawData = message.data
+            // console.log(message.data)
+            const parsed = JSON.parse(rawData)
+            console.log(parsed)
+            const value = parsed.message
+            const li = document.createElement("li")
+            li.innerText = value
+            messageContainer.appendChild(li)
         }
+
+        sendMessgeButton.addEventListener('click', (e) => {
+            // e.preventDefault()
+            const userMessage = messgeInput.value
+            console.log(userMessage)
+            connection.send(JSON.stringify({message: userMessage}))
+        })
     }
 </script>
 </html>

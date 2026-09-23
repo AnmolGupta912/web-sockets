@@ -18,8 +18,10 @@ wsSocket.on("connection", (webSocket) => {
     console.log(`WebSocket connection...`)
 
     webSocket.on("message", (data) => {
-        console.log(`websocket Server message recv.. : ${data.toString()}`)
-        webSocket.send("pongg.. hello ji from server") // sending res to client
+        // console.log(`websocket Server message recv.. : ${data.toString()}`)
+        wsSocket.clients.forEach((client) => {
+            client.send(data.toString())
+        })
     })
 
 })
