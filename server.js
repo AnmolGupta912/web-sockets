@@ -19,6 +19,7 @@ wsSocket.on("connection", (webSocket) => {
 
     webSocket.on("message", (data) => {
         console.log(`websocket Server message recv.. : ${data.toString()}`)
+        webSocket.send("pongg.. hello ji from server") // sending res to client
     })
 
 })
